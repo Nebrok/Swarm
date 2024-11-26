@@ -5,12 +5,14 @@ using UnityEngine;
 public class Hub : MonoBehaviour
 {
     //Resources
+    
     [SerializeField]
     Transform WaterSourceTransform;
     [SerializeField]
     Transform IronSourceTransform;
     [SerializeField]
     Transform CoalSourceTransform;
+    
 
 
     //Drones
@@ -37,6 +39,7 @@ public class Hub : MonoBehaviour
         foreach (Drone drone in ChildDrones)
         {
             drone.SetCurrentTarget(GoalTransform.position);
+            drone.CollectResource(GoalTransform.gameObject);
         }
     }
 
