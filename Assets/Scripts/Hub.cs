@@ -5,21 +5,22 @@ using UnityEngine;
 public class Hub : MonoBehaviour
 {
     //Resources
-    
     [SerializeField]
     Transform WaterSourceTransform;
     [SerializeField]
     Transform IronSourceTransform;
     [SerializeField]
     Transform CoalSourceTransform;
-    
-
 
     //Drones
     [SerializeField]
     List<Drone> ChildDrones = new List<Drone>();
     [SerializeField]
     Transform GoalTransform;
+
+    //Resources
+    [SerializeField]
+    List<Resource> TestResources = new List<Resource>();
 
     [SerializeField]
     private float _water = 10;
@@ -33,13 +34,21 @@ public class Hub : MonoBehaviour
     private float _coal = 1;
     private float _coalBurnRate = -0.001f;
 
+    [SerializeField]
+    GameObject testPickUpItem;
+    [SerializeField]
+    Storage testDropOffPoint;
+
 
     void Start()
     {
+        int index = 0;
         foreach (Drone drone in ChildDrones)
         {
             drone.SetParentHub(this);
-            drone.GoMineResource(GoalTransform.gameObject);
+            //drone.GoMineResource(GoalTransform.gameObject);
+            drone.DropCurrentItemAndMoveNewItemToDepot(TestResources[index].gameObject, testDropOffPoint);
+            index++;
         }
     }
 
@@ -57,4 +66,7 @@ public class Hub : MonoBehaviour
             drone.UpdateEntity();
         }
     }
+
+
+
 }

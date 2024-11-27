@@ -8,10 +8,10 @@ public interface IMineable
 
 public interface IPickable
 {
-    public void PickUp();
+    public bool IsPickUpable();
 }
 
-public class Resource : MonoBehaviour, IMineable
+public class Resource : MonoBehaviour, IMineable, IStorable, IPickable
 {
     public enum ResourceTier
     {
@@ -46,35 +46,62 @@ public class Resource : MonoBehaviour, IMineable
         Destroy(gameObject);
     }
 
-
-
-
-
-
-
-    //Outdated
-    /*
-    void UpdateModel()
+    public bool IsStorable()
     {
-        MeshRenderer[] children = GetComponentsInChildren<MeshRenderer>();
-        foreach (MeshRenderer child in children)
+        if (_resourceTier == ResourceTier.Raw || _resourceTier == ResourceTier.Refined)
         {
-            Destroy(child.gameObject);
+            return true;
         }
-        switch (_resourceTier)
+        else
         {
-            case ResourceTier.Source:
-                Instantiate(_sourceModelPrefab, transform);
-                break;
-            case ResourceTier.Raw:
-                Instantiate(_rawModelPrefab, transform);
-                break;
-            case ResourceTier.Refined:
-                Instantiate(_refinedModelPrefab, transform);
-                break;
+            return false;
         }
     }
-    */
+
+    public GameObject GetGameObject()
+    {
+        return gameObject;
+    }
+
+    public bool IsPickUpable()
+    {
+        if (_resourceTier == ResourceTier.Raw || _resourceTier == ResourceTier.Refined)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
 
 
-}
+
+
+        //Outdated
+        /*
+        void UpdateModel()
+        {
+            MeshRenderer[] children = GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer child in children)
+            {
+                Destroy(child.gameObject);
+            }
+            switch (_resourceTier)
+            {
+                case ResourceTier.Source:
+                    Instantiate(_sourceModelPrefab, transform);
+                    break;
+                case ResourceTier.Raw:
+                    Instantiate(_rawModelPrefab, transform);
+                    break;
+                case ResourceTier.Refined:
+                    Instantiate(_refinedModelPrefab, transform);
+                    break;
+            }
+        }
+        */
+
+
+ }

@@ -1,4 +1,7 @@
+using Mono.Cecil;
 using System.Collections.Generic;
+using System.Resources;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 
@@ -7,7 +10,13 @@ public interface IMovable
     public float GetMaxSpeed();
 }
 
-public class Drone : MonoBehaviour, IMovable
+public interface ICanCarryItems
+{
+    public void Carry(GameObject item);
+    public GameObject Drop();
+}
+
+public class Drone : MonoBehaviour, IMovable, ICanCarryItems
 {
     private Hub _parentHub = null;
 
@@ -56,12 +65,36 @@ public class Drone : MonoBehaviour, IMovable
         _taskSystem.Run();
     }
 
-    //Objective
+    //ActionSequence
     public void GoMineResource(GameObject resource)
     {
         _taskSystem.AddTask(new TravelToEntity(gameObject, resource, 0.75f));
         _taskSystem.AddTask(new DroneMineSurroundings(this));
     }
+
+    //ActionSequence
+    public void TestObjective(GameObject resource, GameObject dropOff)
+    {
+        _taskSystem.AddTask( new TravelToEntity(gameObject, resource, 0.75f));
+        _taskSystem.AddTask( new PickUpItemNearby(this, resource));
+        _taskSystem.AddTask( new TravelToEntity(gameObject, dropOff, 0.75f));
+        _taskSystem.AddTask( new DropItem(this));
+
+    }
+
+    //ActionSequence
+    public void DropCurrentItemAndMoveNewItemToDepot(GameObject item, Storage depot)
+    {
+        if (_isCarrying)
+        {
+            _taskSystem.AddTask(new DropItem(this));
+        }
+        _taskSystem.AddTask(new TravelToEntity(gameObject, item, 0.75f));
+        _taskSystem.AddTask(new PickUpItemNearby(this, item));
+        _taskSystem.AddTask(new TravelToEntity(gameObject, depot.gameObject, 0.75f));
+        _taskSystem.AddTask(new StoreItem(this, depot));
+    }
+
 
     //Action
     public void Mine()
@@ -87,6 +120,27 @@ public class Drone : MonoBehaviour, IMovable
         _isCarrying = true;
         _carriedItem = resource;
         resource.transform.SetParent(transform, false);
+        Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
+        resource.transform.position = newPosition;
+
+    }
+
+    //Action
+    public GameObject Drop()
+    {
+        if (!_isCarrying)
+        {
+            return null;
+        }
+        _carriedItem.transform.parent = null;
+        Vector3 newPosition = transform.position + transform.forward;
+        newPosition.y = _carriedItem.transform.localScale.y / 2;
+
+        _carriedItem.transform.position = newPosition;
+        GameObject droppedItem = _carriedItem;
+        _carriedItem = null;
+        _isCarrying = false;
+        return droppedItem;
     }
 
 }
@@ -185,6 +239,61 @@ public class DroneMineSurroundings : Task
     public override void Execute()
     {
         _self.Mine();
+        TaskStatus = Status.Finished;
+    }
+}
+
+public class PickUpItemNearby : Task
+{
+    ICanCarryItems _self;
+    GameObject _item;
+
+    public PickUpItemNearby(ICanCarryItems self, GameObject item) : base("PickUpItemNearby")
+    {
+        _self = self;
+        _item = item;
+    }
+
+    public override void Execute()
+    {
+        _self.Carry(_item);
+        TaskStatus = Status.Finished;
+    }
+}
+
+public class DropItem : Task
+{
+    ICanCarryItems _self;
+
+    public DropItem(ICanCarryItems self) : base("DropItem")
+    {
+        _self = self;
+    }
+
+    public override void Execute()
+    {
+        _self.Drop();
+        TaskStatus = Status.Finished;
+    }
+}
+
+public class StoreItem : Task
+{
+    ICanCarryItems _self;
+    Storage _targetDepot;
+
+    public StoreItem(ICanCarryItems self, Storage depot) : base("StoreItem")
+    {
+        _self = self;
+        _targetDepot = depot;
+    }
+
+    public override void Execute()
+    {
+        _self.Drop().TryGetComponent(out Resource item);
+        IStorable itemToStore = item;
+
+        _targetDepot.AddItem(itemToStore);
         TaskStatus = Status.Finished;
     }
 }
