@@ -1,6 +1,17 @@
 using UnityEngine;
 
-public class Resource : MonoBehaviour
+
+public interface IMineable
+{
+    public void Mine();
+}
+
+public interface IPickable
+{
+    public void PickUp();
+}
+
+public class Resource : MonoBehaviour, IMineable
 {
     public enum ResourceTier
     {
@@ -10,27 +21,39 @@ public class Resource : MonoBehaviour
     [SerializeField]
     private ResourceTier _resourceTier;
 
-    [SerializeField]
-    GameObject _sourceModelPrefab;
-    [SerializeField]
-    GameObject _rawModelPrefab;
-    [SerializeField]
-    GameObject _refinedModelPrefab;
+    private GameObject _childResource;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _resourceTier = ResourceTier.Source;
+        _childResource = Resources.Load<GameObject>("Prefabs/ResourceRaw");
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        UpdateModel();
+        
 
     }
 
+    public void Mine()
+    {
+        for (int i = 0; i < 1; i++)
+        {
+            Vector3 newPosition = new Vector3(transform.position.x, _childResource.transform.position.y, transform.position.z);
+            Instantiate(_childResource, newPosition, Quaternion.identity);
+        }
+        Destroy(gameObject);
+    }
 
+
+
+
+
+
+
+    //Outdated
+    /*
     void UpdateModel()
     {
         MeshRenderer[] children = GetComponentsInChildren<MeshRenderer>();
@@ -51,6 +74,7 @@ public class Resource : MonoBehaviour
                 break;
         }
     }
+    */
 
 
 }

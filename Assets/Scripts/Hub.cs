@@ -38,8 +38,8 @@ public class Hub : MonoBehaviour
     {
         foreach (Drone drone in ChildDrones)
         {
-            drone.SetCurrentTarget(GoalTransform.position);
-            drone.CollectResource(GoalTransform.gameObject);
+            drone.SetParentHub(this);
+            drone.GoMineResource(GoalTransform.gameObject);
         }
     }
 

@@ -26,14 +26,15 @@ public class TaskSystem
         }
         else if (_currentTask.TaskStatus == Task.Status.Finished)
         {
+            TaskQueue.RemoveAt(0);
             if (TaskQueue.Count == 0)
             {
                 _currentTask = null;
                 return;
-            }
+            } 
             _currentTask = TaskQueue[0];
         }
-
+        Debug.Log(_currentTask.TaskName);
     }
 
     public void AddTask(Task task)

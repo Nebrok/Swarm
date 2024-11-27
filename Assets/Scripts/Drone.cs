@@ -11,7 +11,11 @@ public class Drone : MonoBehaviour, IMovable
 {
     private Hub _parentHub = null;
 
-    private float _movementSpeed = 2f;
+    private float _movementSpeed = 4f;
+    private float _interactionRadius = 1f;
+
+    private bool _isCarrying = false;
+    private GameObject _carriedItem;
 
     private Vector3 _currentTarget;
 
@@ -34,6 +38,11 @@ public class Drone : MonoBehaviour, IMovable
     {
         return _movementSpeed;
     }
+
+    public Hub GetParentHub()
+    {
+        return _parentHub;
+    }
     #endregion
 
 
@@ -44,28 +53,42 @@ public class Drone : MonoBehaviour, IMovable
 
     public void UpdateEntity()
     {
-        if (_currentTarget != null)
-        {
-            //MoveTowards(_currentTarget, 0.75f);
-        }
-
         _taskSystem.Run();
     }
 
-
-    void MoveTowards(Vector3 target, float throttle)
-    {
-        //Keeps the drone locked on the y plane
-        Vector3 actualTargetPosition = new Vector3(target.x, transform.position.y, target.z);
-        transform.position = Vector3.MoveTowards(transform.position, actualTargetPosition, Time.deltaTime * _movementSpeed * throttle);
-    }
-
-    public void CollectResource(GameObject resource)
+    //Objective
+    public void GoMineResource(GameObject resource)
     {
         _taskSystem.AddTask(new TravelToEntity(gameObject, resource, 0.75f));
+        _taskSystem.AddTask(new DroneMineSurroundings(this));
     }
 
-    
+    //Action
+    public void Mine()
+    {
+        Collider[] surroundingObjects = Physics.OverlapSphere(transform.position, _interactionRadius);
+        
+        foreach (Collider collider in surroundingObjects)
+        {
+            if (collider.CompareTag("Resource"))
+            {
+                IMineable resource = collider.gameObject.GetComponent<IMineable>();
+                if (resource != null)
+                {
+                    resource.Mine();
+                }
+            }
+        }
+    }
+
+    //Action
+    public void Carry(GameObject resource)
+    {
+        _isCarrying = true;
+        _carriedItem = resource;
+        resource.transform.SetParent(transform, false);
+    }
+
 }
 
 
@@ -99,12 +122,70 @@ public class TravelToEntity : Task
         Vector3 actualTargetPosition = new Vector3(target.x, selfTransform.position.y, target.z);
         selfTransform.position = Vector3.MoveTowards(selfTransform.position, actualTargetPosition, Time.deltaTime * _maxSpeed * _throttle);
 
-        float distToObject = (_goal.transform.position - selfTransform.position).magnitude;
+        float distToObject = (target - selfTransform.position).magnitude;
         if (distToObject < 1f)
+        {
+            TaskStatus = Status.Finished;
+            Debug.Log("TaskFinished");
+        }
+
+
+    }
+}
+
+public class DroneReturnToHub : Task
+{
+    private GameObject _goal;
+    private Drone _self;
+    private float _throttle;
+    private float _maxSpeed;
+
+
+    public DroneReturnToHub(Drone self, float throttle) : base("Return to Hub")
+    {
+        _self = self;
+        _goal = _self.GetParentHub().gameObject;
+        _throttle = throttle;
+        _maxSpeed = _self.GetMaxSpeed();
+    }
+
+    public override void Execute()
+    {
+        if (TaskStatus == Status.Pending)
+        {
+            TaskStatus = Status.Ongoing;
+        }
+
+        Vector3 target = _goal.transform.position;
+        Transform selfTransform = _self.transform;
+        Vector3 actualTargetPosition = new Vector3(target.x, selfTransform.position.y, target.z);
+        selfTransform.position = Vector3.MoveTowards(selfTransform.position, actualTargetPosition, Time.deltaTime * _maxSpeed * _throttle);
+
+        float distToObject = (target - selfTransform.position).magnitude;
+        if (distToObject < 2.5f)
         {
             TaskStatus = Status.Finished;
         }
 
 
     }
+
+
 }
+
+public class DroneMineSurroundings : Task
+{
+    private Drone _self;
+
+    public DroneMineSurroundings(Drone self) : base("DroneMineSurroundings")
+    {
+        _self = self;
+    }
+
+    public override void Execute()
+    {
+        _self.Mine();
+        TaskStatus = Status.Finished;
+    }
+}
+
