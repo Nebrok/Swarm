@@ -73,17 +73,7 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
     }
 
     //ActionSequence
-    public void TestObjective(GameObject resource, GameObject dropOff)
-    {
-        _taskSystem.AddTask( new TravelToEntity(gameObject, resource, 0.75f));
-        _taskSystem.AddTask( new PickUpItemNearby(this, resource));
-        _taskSystem.AddTask( new TravelToEntity(gameObject, dropOff, 0.75f));
-        _taskSystem.AddTask( new DropItem(this));
-
-    }
-
-    //ActionSequence
-    public void DropCurrentItemAndMoveNewItemToDepot(GameObject item, Storage depot)
+    public void MoveNewItemToDepot(GameObject item, Storage depot)
     {
         if (_isCarrying)
         {
@@ -94,7 +84,6 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
         _taskSystem.AddTask(new TravelToEntity(gameObject, depot.gameObject, 0.75f));
         _taskSystem.AddTask(new StoreItem(this, depot));
     }
-
 
     //Action
     public void Mine()
@@ -142,7 +131,6 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
         _isCarrying = false;
         return droppedItem;
     }
-
 }
 
 
