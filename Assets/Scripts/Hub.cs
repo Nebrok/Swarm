@@ -26,6 +26,8 @@ public class Hub : MonoBehaviour
             drone.MoveNewItemToDepot(TestResources[index].gameObject, testDropOffPoint);
             index++;
         }
+
+        PoissonDiskSamples samples = new PoissonDiskSamples(10, 1f);
     }
 
     void Update()
