@@ -4,7 +4,7 @@ using UnityEngine;
 public class PoissonDiskSamples
 {
     /// 
-    /// 
+    /// A possible solution to drone spacing
     ///
 
     private float _areaWidth;

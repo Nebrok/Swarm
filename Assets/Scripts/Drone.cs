@@ -20,13 +20,12 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
 {
     private Hub _parentHub = null;
 
+
     private float _movementSpeed = 4f;
     private float _interactionRadius = 1f;
 
     private bool _isCarrying = false;
     private GameObject _carriedItem;
-
-    private Vector3 _currentTarget;
 
     private TaskSystem _taskSystem;
 
@@ -34,11 +33,6 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
     public void SetParentHub(Hub newParentHub)
     {
         _parentHub = newParentHub;
-    }
-
-    public void SetCurrentTarget(Vector3 newTarget)
-    {
-        _currentTarget = newTarget;
     }
     #endregion
 
@@ -54,7 +48,6 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
     }
     #endregion
 
-
     void Awake()
     {
         _taskSystem = new TaskSystem();
@@ -63,6 +56,11 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
     public void UpdateEntity()
     {
         _taskSystem.Run();
+    }
+
+    public int GetTaskQueueLength()
+    {
+        return _taskSystem.GetTaskQueueLength();
     }
 
     //ActionSequence
@@ -83,6 +81,13 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
         _taskSystem.AddTask(new PickUpItemNearby(this, item));
         _taskSystem.AddTask(new TravelToEntity(gameObject, depot.gameObject, 0.75f));
         _taskSystem.AddTask(new StoreItem(this, depot));
+        ReturnToHub();
+    }
+
+    //ActionSequence
+    public void ReturnToHub()
+    {
+        _taskSystem.AddTask(new DroneReturnToHub(this, 0.75f));
     }
 
     //Action
@@ -177,18 +182,22 @@ public class TravelToEntity : Task
 
 public class DroneReturnToHub : Task
 {
-    private GameObject _goal;
+    private Hub _goal;
     private Drone _self;
     private float _throttle;
     private float _maxSpeed;
+    private Vector3 targetPosition;
 
 
     public DroneReturnToHub(Drone self, float throttle) : base("Return to Hub")
     {
         _self = self;
-        _goal = _self.GetParentHub().gameObject;
+        _goal = _self.GetParentHub();
         _throttle = throttle;
         _maxSpeed = _self.GetMaxSpeed();
+
+        targetPosition = _goal.GetFreeIdleCoordinates();
+
     }
 
     public override void Execute()
@@ -198,13 +207,12 @@ public class DroneReturnToHub : Task
             TaskStatus = Status.Ongoing;
         }
 
-        Vector3 target = _goal.transform.position;
         Transform selfTransform = _self.transform;
-        Vector3 actualTargetPosition = new Vector3(target.x, selfTransform.position.y, target.z);
+        Vector3 actualTargetPosition = new Vector3(targetPosition.x, selfTransform.position.y, targetPosition.z);
         selfTransform.position = Vector3.MoveTowards(selfTransform.position, actualTargetPosition, Time.deltaTime * _maxSpeed * _throttle);
 
-        float distToObject = (target - selfTransform.position).magnitude;
-        if (distToObject < 2.5f)
+        float distToObject = (actualTargetPosition - selfTransform.position).magnitude;
+        if (distToObject < 0.01f)
         {
             TaskStatus = Status.Finished;
         }

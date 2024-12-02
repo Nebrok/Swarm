@@ -42,6 +42,10 @@ public class TaskSystem
         TaskQueue.Add(task);
     }
 
+    public int GetTaskQueueLength()
+    {
+        return TaskQueue.Count;
+    }
 }
 
 public class Task
