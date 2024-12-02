@@ -140,7 +140,7 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
         newPosition.y = _carriedItem.transform.localScale.y / 2;
         if (_carriedItem.TryGetComponent(out IPickable component))
         {
-            component.SetPickedUp(true);
+            component.SetPickedUp(false);
         }
 
         _carriedItem.transform.position = newPosition;
@@ -210,7 +210,7 @@ public class DroneReturnToHub : Task
         _maxSpeed = _self.GetMaxSpeed();
 
         targetPosition = _goal.GetFreeIdleCoordinates();
-
+        TaskPriority = Priority.Low;
     }
 
     public override void Execute()

@@ -57,7 +57,14 @@ public class Task
         Pending, Ongoing, Finished
     };
 
-    public Status TaskStatus = Status.Pending;
+    public enum Priority
+    {
+        Low, Medium, High
+    }
+
+    private Status _taskStatus = Status.Pending;
+    private Priority _taskPriority = Priority.Medium; 
+
 
 
     public Task(string taskName)
@@ -69,4 +76,16 @@ public class Task
     {
         Debug.Log("Task \"" + TaskName + "\" not implemented!");
     }
+
+    public Status TaskStatus 
+    { 
+        get { return _taskStatus; } 
+        set { _taskStatus = value; }
+    }
+    public Priority TaskPriority 
+    { 
+        get { return _taskPriority; }
+        set { _taskPriority = value; }
+    }
+
 }
