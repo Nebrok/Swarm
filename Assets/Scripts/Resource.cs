@@ -9,6 +9,10 @@ public interface IMineable
 public interface IPickable
 {
     public bool IsPickUpable();
+
+    public bool IsPickedUp();
+
+    public void SetPickedUp(bool value);
 }
 
 public class Resource : MonoBehaviour, IMineable, IStorable, IPickable
@@ -22,6 +26,11 @@ public class Resource : MonoBehaviour, IMineable, IStorable, IPickable
     private ResourceTier _resourceTier;
 
     private GameObject _childResource;
+
+    private bool _isStored = false;
+    private bool _isPickedUp = false;
+
+    private GameObject _targetedBy = null;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -58,6 +67,31 @@ public class Resource : MonoBehaviour, IMineable, IStorable, IPickable
         }
     }
 
+    public bool IsTargeted()
+    {
+        return _targetedBy != null;
+    }
+
+    public GameObject IsTargetedBy()
+    {
+        return _targetedBy;
+    }
+
+    public void SetTargetedBy(GameObject targetedBy)
+    {
+        _targetedBy = targetedBy;
+    }
+
+    public bool IsStored()
+    {
+        return _isStored;
+    }
+
+    public void SetStored(bool value)
+    {
+        _isStored = value;
+    }
+
     public GameObject GetGameObject()
     {
         return gameObject;
@@ -76,32 +110,13 @@ public class Resource : MonoBehaviour, IMineable, IStorable, IPickable
 
     }
 
+    public bool IsPickedUp()
+    {
+        return _isPickedUp;
+    }
 
-
-
-        //Outdated
-        /*
-        void UpdateModel()
-        {
-            MeshRenderer[] children = GetComponentsInChildren<MeshRenderer>();
-            foreach (MeshRenderer child in children)
-            {
-                Destroy(child.gameObject);
-            }
-            switch (_resourceTier)
-            {
-                case ResourceTier.Source:
-                    Instantiate(_sourceModelPrefab, transform);
-                    break;
-                case ResourceTier.Raw:
-                    Instantiate(_rawModelPrefab, transform);
-                    break;
-                case ResourceTier.Refined:
-                    Instantiate(_refinedModelPrefab, transform);
-                    break;
-            }
-        }
-        */
-
-
+    public void SetPickedUp(bool value)
+    {
+        _isPickedUp = value;
+    }
  }

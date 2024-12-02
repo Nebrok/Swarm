@@ -4,6 +4,11 @@ using UnityEngine;
 public interface IStorable
 {
     public bool IsStorable();
+
+    public bool IsStored();
+
+    public void SetStored(bool value);
+
     public GameObject GetGameObject();
 }
 
@@ -45,13 +50,17 @@ public class Storage : MonoBehaviour
     public bool AddItem(IStorable item)
     {
         _storedItems.Add(item);
+        item.SetStored(true);
         _storageModified = true;
         return true;
     }
 
     public IStorable GetItem()
     {
-        return _storedItems[_storedItems.Count - 1];
+        IStorable item = _storedItems[_storedItems.Count - 1];
+        item.SetStored(false);
+
+        return item;
     }
 
     #region Properties

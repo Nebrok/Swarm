@@ -77,6 +77,10 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
         {
             _taskSystem.AddTask(new DropItem(this));
         }
+        if (item.TryGetComponent(out Resource resource))
+        {
+            resource.SetTargetedBy(gameObject);
+        }
         _taskSystem.AddTask(new TravelToEntity(gameObject, item, 0.75f));
         _taskSystem.AddTask(new PickUpItemNearby(this, item));
         _taskSystem.AddTask(new TravelToEntity(gameObject, depot.gameObject, 0.75f));
@@ -113,10 +117,15 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
     {
         _isCarrying = true;
         _carriedItem = resource;
+        
+        if (resource.TryGetComponent(out IPickable component))
+        {
+            component.SetPickedUp(true);
+        }
+        
         resource.transform.SetParent(transform, false);
         Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
         resource.transform.position = newPosition;
-
     }
 
     //Action
@@ -129,6 +138,10 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
         _carriedItem.transform.parent = null;
         Vector3 newPosition = transform.position + transform.forward;
         newPosition.y = _carriedItem.transform.localScale.y / 2;
+        if (_carriedItem.TryGetComponent(out IPickable component))
+        {
+            component.SetPickedUp(true);
+        }
 
         _carriedItem.transform.position = newPosition;
         GameObject droppedItem = _carriedItem;
@@ -173,7 +186,7 @@ public class TravelToEntity : Task
         if (distToObject < 1f)
         {
             TaskStatus = Status.Finished;
-            Debug.Log("TaskFinished");
+            //Debug.Log("TaskFinished");
         }
 
 

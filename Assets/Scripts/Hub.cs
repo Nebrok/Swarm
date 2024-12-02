@@ -1,9 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Hub : MonoBehaviour
 {
+    //Hub World Data
+    [SerializeField]
+    private float _operationRadius;
+    private List<Resource> _freeResources = new List<Resource>();
+    private List<Resource> _targetResources = new List<Resource>();
+    private List<Storage> _storages = new List<Storage>();
+
+
     //Storage
     private List<IStorable> _storedItems = new List<IStorable>();
 
@@ -25,10 +34,14 @@ public class Hub : MonoBehaviour
         _allIdlePositions = GenerateDronePositions();
         _freeIdlePositions.AddRange(_allIdlePositions);
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 6; i++)
         {
             CreateNewDrone();
         }
+
+
+        StartCoroutine(HubUpdateAvailiability());
+        StartCoroutine(ScanEnvironmentRoutine());
     }
 
     void Update()
@@ -36,6 +49,23 @@ public class Hub : MonoBehaviour
         foreach (Drone drone in ChildDrones)
         {
             drone.UpdateEntity();
+        }
+
+        List<Resource> updatedResources = new List<Resource>();
+        foreach (Resource resource in _freeResources)
+        {
+            Drone assignedDrone = GetUnassignedDrone();
+            if (assignedDrone != null && !_targetResources.Contains(resource))
+            {
+                assignedDrone.MoveNewItemToDepot(resource.gameObject, _storages[0]);
+                updatedResources.Add(resource);
+                _targetResources.Add(resource);
+            }
+            
+        }
+        foreach (Resource resource in updatedResources)
+        {
+            _freeResources.Remove(resource);
         }
     }
 
@@ -49,6 +79,7 @@ public class Hub : MonoBehaviour
             newPos.y = dronePrefab.transform.position.y;
 
             Drone newDrone = Instantiate(dronePrefab, newPos, Quaternion.identity).GetComponent<Drone>();
+            newDrone.SetParentHub(this);
             ChildDrones.Add(newDrone);
         }
         else
@@ -56,6 +87,46 @@ public class Hub : MonoBehaviour
             Debug.Log("Hub cannot surpervise any more drones");
         }
     }
+
+    public void ScanEnvironment()
+    {
+        _freeResources.Clear();
+        _storages.Clear();
+        Collider[] objects = Physics.OverlapSphere(transform.position, _operationRadius);
+
+        for (int i = 0; i < objects.Length; i++)
+        {
+            if (objects[i].gameObject.TryGetComponent(out Resource resource))
+            {
+                if (resource.IsStored())
+                {
+                    continue;
+                }
+                _freeResources.Add(resource);
+            }
+
+            if (objects[i].gameObject.TryGetComponent(out Storage storageDepot))
+            {
+                _storages.Add(storageDepot);
+            }
+        }
+
+        Debug.Log($"Currently {_freeResources.Count} resources laying around.");
+        Debug.Log($"Currently {_storages.Count} storage depot in operation area.");
+    }
+
+    public Drone GetUnassignedDrone()
+    {
+        foreach (Drone drone in ChildDrones)
+        {
+            if (drone.GetTaskQueueLength() == 0)
+            {
+                return drone;
+            }
+        }
+        return null;
+    }
+
 
     public List<Vector3> GenerateDronePositions()
     {
@@ -117,15 +188,26 @@ public class Hub : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawRay(transform.position, transform.forward * 3f);
+        Gizmos.DrawWireSphere(transform.position, _operationRadius);
     }
-
 
     IEnumerator HubUpdateAvailiability()
     {
         while (true)
         {
+            //Debug.Log("Update Idle Availiability");
             CheckIdleAvailiability();
-            yield return new WaitForSeconds(0.5F);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    IEnumerator ScanEnvironmentRoutine()
+    {
+        while (true)
+        {
+            //Debug.Log("Hub Scanning Environment");
+            ScanEnvironment();
+            yield return new WaitForSeconds(1f);
         }
     }
 

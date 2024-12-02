@@ -34,7 +34,7 @@ public class TaskSystem
             } 
             _currentTask = TaskQueue[0];
         }
-        Debug.Log(_currentTask.TaskName);
+        //Debug.Log(_currentTask.TaskName);
     }
 
     public void AddTask(Task task)

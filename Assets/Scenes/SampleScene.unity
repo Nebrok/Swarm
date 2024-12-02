@@ -886,6 +886,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 083fa327f3dacb84fbe1c49b3d4600fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _operationRadius: 75
   ChildDrones: []
 --- !u!1 &1896304587
 GameObject:
