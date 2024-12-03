@@ -1,10 +1,7 @@
 using UnityEngine;
 
 
-public interface IMineable
-{
-    public void Mine();
-}
+
 
 public interface IPickable
 {
@@ -15,7 +12,7 @@ public interface IPickable
     public void SetPickedUp(bool value);
 }
 
-public class Resource : MonoBehaviour, IMineable, IStorable, IPickable
+public class Resource : MonoBehaviour, IStorable, IPickable
 {
     public enum ResourceTier
     {
@@ -25,7 +22,6 @@ public class Resource : MonoBehaviour, IMineable, IStorable, IPickable
     [SerializeField]
     private ResourceTier _resourceTier;
 
-    private GameObject _childResource;
 
     private bool _isStored = false;
     private bool _isPickedUp = false;
@@ -35,7 +31,7 @@ public class Resource : MonoBehaviour, IMineable, IStorable, IPickable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _childResource = Resources.Load<GameObject>("Prefabs/ResourceRaw");
+
     }
 
     // Update is called once per frame
@@ -43,16 +39,6 @@ public class Resource : MonoBehaviour, IMineable, IStorable, IPickable
     {
         
 
-    }
-
-    public void Mine()
-    {
-        for (int i = 0; i < 1; i++)
-        {
-            Vector3 newPosition = new Vector3(transform.position.x, _childResource.transform.position.y, transform.position.z);
-            Instantiate(_childResource, newPosition, Quaternion.identity);
-        }
-        Destroy(gameObject);
     }
 
     public bool IsStorable()

@@ -22,7 +22,7 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
 
 
     private float _movementSpeed = 4f;
-    private float _interactionRadius = 1f;
+    private float _interactionRadius = 1.5f;
 
     private bool _isCarrying = false;
     private GameObject _carriedItem;
@@ -101,7 +101,7 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
         
         foreach (Collider collider in surroundingObjects)
         {
-            if (collider.CompareTag("Resource"))
+            if (collider.CompareTag("Source"))
             {
                 IMineable resource = collider.gameObject.GetComponent<IMineable>();
                 if (resource != null)

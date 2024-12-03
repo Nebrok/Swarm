@@ -11,6 +11,7 @@ public class Hub : MonoBehaviour
     private List<Resource> _freeResources = new List<Resource>();
     private List<Resource> _targetResources = new List<Resource>();
     private List<Storage> _storages = new List<Storage>();
+    private List<Source> _sources = new List<Source>();
 
 
     //Storage
@@ -42,6 +43,14 @@ public class Hub : MonoBehaviour
 
         StartCoroutine(HubUpdateAvailiability());
         StartCoroutine(ScanEnvironmentRoutine());
+
+        Drone drone = GetUnassignedDrone();
+
+        drone.GoMineResource(_sources[0].gameObject);
+
+
+
+
     }
 
     void Update()
@@ -109,6 +118,15 @@ public class Hub : MonoBehaviour
             {
                 _storages.Add(storageDepot);
             }
+
+            if (objects[i].gameObject.TryGetComponent(out Source source))
+            {
+                _sources.Add(source);
+            }
+
+
+
+
         }
 
         Debug.Log($"Currently {_freeResources.Count} resources laying around.");
