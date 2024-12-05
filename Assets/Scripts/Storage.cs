@@ -13,7 +13,7 @@ public interface IStorable
 }
 
 
-public class Storage : MonoBehaviour
+public class Storage : Building
 {
     private List<IStorable> _storedItems = new List<IStorable>();
     private float _interationRange = 2f;
@@ -24,7 +24,19 @@ public class Storage : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _gridPos = new Vector2Int(-17, -48);
+        _gridWidth = 4;
+        _gridHeight = 2;
+
+        Vector3 updatedPosition = WorldGrid.GetWorldPosFromGrid(_gridPos);
+        updatedPosition.x += transform.localScale.x / 2;
+        updatedPosition.z += transform.localScale.z / 2;
+
+        transform.position = updatedPosition;
         
+
+
+
     }
 
     // Update is called once per frame
@@ -36,7 +48,7 @@ public class Storage : MonoBehaviour
             float runningHeightOffset = 0;
             foreach (IStorable item in _storedItems)
             {
-                Vector3 newPosition = new Vector3(transform.position.x, transform.position.y+transform.localScale.y/2, transform.position.z);
+                Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z);
                 float itemHeight = item.GetGameObject().transform.localScale.y;
                 newPosition.y += runningHeightOffset + itemHeight / 2;
                 runningHeightOffset += itemHeight;

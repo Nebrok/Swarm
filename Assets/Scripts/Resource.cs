@@ -1,8 +1,5 @@
 using UnityEngine;
 
-
-
-
 public interface IPickable
 {
     public bool IsPickUpable();
@@ -14,14 +11,14 @@ public interface IPickable
 
 public class Resource : MonoBehaviour, IStorable, IPickable
 {
-    public enum ResourceTier
-    {
-        Source, Raw, Refined
-    }
-
     [SerializeField]
-    private ResourceTier _resourceTier;
-
+    private string _resourceName = string.Empty;
+    
+    public string ResourceName
+    {
+        get { return _resourceName; }
+        set { _resourceName = value; }
+    }
 
     private bool _isStored = false;
     private bool _isPickedUp = false;
@@ -43,14 +40,7 @@ public class Resource : MonoBehaviour, IStorable, IPickable
 
     public bool IsStorable()
     {
-        if (_resourceTier == ResourceTier.Raw || _resourceTier == ResourceTier.Refined)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return true;
     }
 
     public bool IsTargeted()
@@ -85,15 +75,7 @@ public class Resource : MonoBehaviour, IStorable, IPickable
 
     public bool IsPickUpable()
     {
-        if (_resourceTier == ResourceTier.Raw || _resourceTier == ResourceTier.Refined)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
+        return true;
     }
 
     public bool IsPickedUp()

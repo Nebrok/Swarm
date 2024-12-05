@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b273b38446923345b3af842340e6fd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resourceTier: 1
+  _resourceName: Logs
 --- !u!65 &-3459192272507405649
 BoxCollider:
   m_ObjectHideFlags: 0
