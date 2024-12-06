@@ -809,6 +809,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e413e9aa77bcf9b4f810c91f2b3a0b88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gridWidth: 4
+  _gridHeight: 2
 --- !u!1 &1443394490
 GameObject:
   m_ObjectHideFlags: 0
@@ -949,6 +951,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _worldGridWidth: 200
   _gridSize: 1
+  _showGrid: 1
 --- !u!4 &1570480075
 Transform:
   m_ObjectHideFlags: 0

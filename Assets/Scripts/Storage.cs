@@ -21,12 +21,15 @@ public class Storage : Building
     private bool _storageModified = false;
 
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _gridPos = new Vector2Int(-17, -48);
-        _gridWidth = 4;
-        _gridHeight = 2;
+        _gridWidth = 2;
+        _gridHeight = 4;
+
+        WorldGrid.Instance.PlaceInGrid(_gridPos, _gridWidth, _gridHeight);
 
         Vector3 updatedPosition = WorldGrid.GetWorldPosFromGrid(_gridPos);
         updatedPosition.x += transform.localScale.x / 2;

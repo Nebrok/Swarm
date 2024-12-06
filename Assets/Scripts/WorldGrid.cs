@@ -5,9 +5,13 @@ public class WorldGrid : MonoBehaviour
     public static WorldGrid Instance;
 
     [SerializeField]
-    private int _worldGridWidth = 100;
+    private int _worldGridWidth;
     [SerializeField]
     private float _gridSize = 1f;
+
+    [SerializeField] bool _showGrid = true;
+
+    private bool[,] _gridOccupation;
 
     private void Awake()
     {
@@ -19,6 +23,16 @@ public class WorldGrid : MonoBehaviour
         {
             Destroy(this);
         }
+
+        _gridOccupation = new bool[_worldGridWidth, _worldGridWidth];
+        for (int j = 0; j < _worldGridWidth; j++)
+        {
+            for (int i = 0; i < _worldGridWidth; i++)
+            {
+                _gridOccupation[i, j] = false;
+            }
+        }
+
     }
 
 
@@ -36,13 +50,30 @@ public class WorldGrid : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = new Color(1, 0, 0, 0.4f);
+        if (!_showGrid)
+        {
+            return;
+        }
+
+        int i = 0;
+        int j = 0;
         for (int x = -(_worldGridWidth / 2); x < (_worldGridWidth / 2); x++)
         {
+            j = 0;
             for (int y = -(_worldGridWidth / 2); y < (_worldGridWidth / 2); y++)
             {
-                Gizmos.DrawWireCube(new Vector3(x, 0, y), new Vector3(0.95f, 0.4f, 0.95f));
+                if (_gridOccupation[i, j])
+                {
+                    Gizmos.color = new Color(1, 0, 0, 0.1f);
+                }
+                else
+                {
+                    Gizmos.color = new Color(0, 1, 0, 0.1f);
+                }
+                Gizmos.DrawWireCube(new Vector3(x + _gridSize / 2, 0, y + _gridSize / 2), new Vector3(0.95f, 0.4f, 0.95f));
+                j++;
             }
+            i++;
         }
     }
 
@@ -63,6 +94,26 @@ public class WorldGrid : MonoBehaviour
 
         return gridPos;
     }
+
+    public void PlaceInGrid(Vector2Int gridPos, int gridWidth, int gridHeight)
+    {
+        int halfSize = _worldGridWidth / 2;
+        for (int j = 0; j < gridHeight; j++)
+        {
+            for (int i = 0; i < gridWidth; i++)
+            {
+                int x = gridPos.x + halfSize + i;
+                int y = gridPos.y + halfSize + j;
+                Debug.Log("Sizes " + x + " , " + y + " , " + halfSize);
+                _gridOccupation[x, y] = true;
+            }
+        }
+
+    }
+
+
+
+
 
     public float GridSize
     {

@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class Building : MonoBehaviour
 {
-
+    [SerializeField]
     protected int _gridWidth;
+    [SerializeField]
     protected int _gridHeight;
 
     protected Vector2Int _gridPos; //Bottom-Right grid cell 
