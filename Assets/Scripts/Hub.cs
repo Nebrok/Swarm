@@ -35,7 +35,7 @@ public class Hub : MonoBehaviour
         _allIdlePositions = GenerateDronePositions();
         _freeIdlePositions.AddRange(_allIdlePositions);
 
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 3; i++)
         {
             CreateNewDrone();
         }
@@ -47,10 +47,6 @@ public class Hub : MonoBehaviour
         Drone drone = GetUnassignedDrone();
 
         drone.GoMineResource(_sources[0].gameObject);
-
-
-
-
     }
 
     void Update()
@@ -63,10 +59,15 @@ public class Hub : MonoBehaviour
         List<Resource> updatedResources = new List<Resource>();
         foreach (Resource resource in _freeResources)
         {
+            Storage targetStorage = FindStorageOfType(resource.ResourceName);
+            if (targetStorage == null)
+            {
+                continue;
+            }
             Drone assignedDrone = GetUnassignedDrone();
             if (assignedDrone != null && !_targetResources.Contains(resource))
             {
-                assignedDrone.MoveNewItemToDepot(resource.gameObject, _storages[0]);
+                assignedDrone.MoveNewItemToDepot(resource.gameObject, targetStorage);
                 updatedResources.Add(resource);
                 _targetResources.Add(resource);
             }
@@ -82,7 +83,7 @@ public class Hub : MonoBehaviour
     {
         if (ChildDrones.Count < _maxDrones)
         {
-            GameObject dronePrefab = Resources.Load<GameObject>("Prefabs/Drone");
+            GameObject dronePrefab = Resources.Load<GameObject>("Prefabs/justaguy");
 
             Vector3 newPos = GetFreeIdleCoordinates();
             newPos.y = dronePrefab.transform.position.y;
@@ -145,6 +146,17 @@ public class Hub : MonoBehaviour
         return null;
     }
 
+    public Storage FindStorageOfType(string type)
+    {
+        foreach (Storage storage in _storages)
+        {
+            if (storage.StorageType == type)
+            {
+                return storage;
+            }
+        }
+        return null;
+    }
 
     public List<Vector3> GenerateDronePositions()
     {

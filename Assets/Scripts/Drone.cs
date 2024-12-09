@@ -19,6 +19,8 @@ public interface ICanCarryItems
 public class Drone : MonoBehaviour, IMovable, ICanCarryItems
 {
     private Hub _parentHub = null;
+    float _rotationOffset = 90;
+    //on justaguy model -transform.right is facing forward
 
 
     private float _movementSpeed = 4f;
@@ -51,11 +53,22 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
     void Awake()
     {
         _taskSystem = new TaskSystem();
+        Vector3 newRotation = new Vector3(0, _rotationOffset, 0);
+        transform.rotation = Quaternion.Euler(newRotation);
     }
 
     public void UpdateEntity()
     {
         _taskSystem.Run();
+        if (_isCarrying && _carriedItem != null)
+        {
+            Vector3 carriedItemPos = transform.position + -transform.right;
+            carriedItemPos.y = 1f;
+
+
+            _carriedItem.transform.position = carriedItemPos;
+            _carriedItem.transform.rotation = transform.rotation;
+        }
     }
 
     public int GetTaskQueueLength()
@@ -122,10 +135,6 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
         {
             component.SetPickedUp(true);
         }
-        
-        resource.transform.SetParent(transform, false);
-        Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
-        resource.transform.position = newPosition;
     }
 
     //Action
@@ -148,6 +157,13 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
         _carriedItem = null;
         _isCarrying = false;
         return droppedItem;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Vector3 rayPos = transform.position;
+        rayPos.y += 1f;
+        Gizmos.DrawRay(rayPos, -transform.right);
     }
 }
 
@@ -180,6 +196,7 @@ public class TravelToEntity : Task
         Vector3 target = _goal.transform.position;
         Transform selfTransform = _self.transform;
         Vector3 actualTargetPosition = new Vector3(target.x, selfTransform.position.y, target.z);
+        selfTransform.right = selfTransform.position - actualTargetPosition;
         selfTransform.position = Vector3.MoveTowards(selfTransform.position, actualTargetPosition, Time.deltaTime * _maxSpeed * _throttle);
 
         float distToObject = (target - selfTransform.position).magnitude;
@@ -188,8 +205,6 @@ public class TravelToEntity : Task
             TaskStatus = Status.Finished;
             //Debug.Log("TaskFinished");
         }
-
-
     }
 }
 
@@ -222,6 +237,7 @@ public class DroneReturnToHub : Task
 
         Transform selfTransform = _self.transform;
         Vector3 actualTargetPosition = new Vector3(targetPosition.x, selfTransform.position.y, targetPosition.z);
+        selfTransform.right = selfTransform.position - actualTargetPosition;
         selfTransform.position = Vector3.MoveTowards(selfTransform.position, actualTargetPosition, Time.deltaTime * _maxSpeed * _throttle);
 
         float distToObject = (actualTargetPosition - selfTransform.position).magnitude;

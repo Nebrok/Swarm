@@ -1,31 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IStorable
-{
-    public bool IsStorable();
-
-    public bool IsStored();
-
-    public void SetStored(bool value);
-
-    public GameObject GetGameObject();
-}
-
-public class Storage : Building
+public class BuildingStorage : MonoBehaviour
 {
     private List<IStorable> _storedItems = new List<IStorable>();
-    private float _interactionRange = 2f;
 
     private bool _storageModified = false;
 
-    [SerializeField]
-    private string _storageType = string.Empty;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        SetTransformToGridPos();
+        
     }
 
     // Update is called once per frame
@@ -64,17 +50,5 @@ public class Storage : Building
 
         return item;
     }
-
-    #region Properties
-    public float InteractionRange
-    {
-        get { return _interactionRange; }
-    }
-
-    public string StorageType
-    {
-        get { return _storageType; }
-    }
-    #endregion
 
 }
