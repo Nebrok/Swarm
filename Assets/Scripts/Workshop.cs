@@ -8,7 +8,8 @@ public class Workshop : Building
     [SerializeField]
     BuildingStorage _storage;
 
-    List<Resource> _receipeMaterials = new List<Resource>();
+    List<Resource> _recipeMaterials = new List<Resource>();
+    GameObject _recipeProduct;
 
     [SerializeField]
     RecipeSO _recipeSO;
@@ -23,5 +24,12 @@ public class Workshop : Building
     void Update()
     {
         
+    }
+
+    void OpenNewRecipe(RecipeSO newRecipe)
+    {
+        _recipeSO = newRecipe;
+        _recipeMaterials = new List<Resource>(newRecipe.ingredients);
+        _recipeProduct = newRecipe.Product;
     }
 }
