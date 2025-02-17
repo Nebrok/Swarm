@@ -13,16 +13,13 @@ public class PoissonTesting : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _distro = new PoissonDiskSamples(_samplingHalfWidth, _minimumDist, 100);
+        _distro = new PoissonDiskSamples(_samplingHalfWidth, _minimumDist, 30);
 
         foreach (Vector2 pos in _distro.PoissonDiscSample)
         {
-            Vector3 newPos = new Vector3(pos.x, -2, pos.y);
+            Vector3 newPos = new Vector3(pos.x, 0.1f, pos.y);
             Instantiate(_testSphere, newPos, Quaternion.identity, transform);
         }
-
-
-
     }
 
     // Update is called once per frame
@@ -30,4 +27,6 @@ public class PoissonTesting : MonoBehaviour
     {
         
     }
+
+
 }

@@ -163,8 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1482067689076940a19162b5a65d2ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _samplingHalfWidth: 50
-  _minimumDist: 5
+  _samplingHalfWidth: 10
+  _minimumDist: 0.5
   _testSphere: {fileID: 206442992355838501, guid: e711f80c1b7a07949be74b79081805ef, type: 3}
 --- !u!1001 &328747741
 PrefabInstance:
