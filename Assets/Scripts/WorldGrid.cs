@@ -104,7 +104,7 @@ public class WorldGrid : MonoBehaviour
             {
                 int x = gridPos.x + halfSize + i;
                 int y = gridPos.y + halfSize + j;
-                Debug.Log("Sizes " + x + " , " + y + " , " + halfSize);
+                //Debug.Log("Sizes " + x + " , " + y + " , " + halfSize);
                 _gridOccupation[x, y] = true;
             }
         }
