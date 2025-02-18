@@ -119,6 +119,54 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &52579703
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 52579705}
+  - component: {fileID: 52579704}
+  m_Layer: 0
+  m_Name: ResourceSpawning
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &52579704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52579703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f0ef084cac2b984fbad1941088d913d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceToSpawn: {fileID: 4501257072499807825, guid: 387a82d19a434e145bedfcd407b84ceb, type: 3}
+  _spawnNum: 100
+  _spawnRange: 100
+  drawSpawnArea: 0
+--- !u!4 &52579705
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52579703}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &316883502
 GameObject:
   m_ObjectHideFlags: 0
@@ -164,7 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _samplingHalfWidth: 10
-  _minimumDist: 0.5
+  _minimumDist: 0.4
   _testSphere: {fileID: 206442992355838501, guid: e711f80c1b7a07949be74b79081805ef, type: 3}
 --- !u!1001 &328747741
 PrefabInstance:
@@ -1048,6 +1096,14 @@ PrefabInstance:
       propertyPath: _storageType
       value: Logs
       objectReference: {fileID: 0}
+    - target: {fileID: 4199996982257231621, guid: 2c5e7b3458923b24aafd152f8041ec09, type: 3}
+      propertyPath: _buildingWidth
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199996982257231621, guid: 2c5e7b3458923b24aafd152f8041ec09, type: 3}
+      propertyPath: _buildingHeight
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5662414157046579459, guid: 2c5e7b3458923b24aafd152f8041ec09, type: 3}
       propertyPath: m_Name
       value: Storage (1)
@@ -1241,6 +1297,14 @@ PrefabInstance:
     - target: {fileID: 4199996982257231621, guid: 2c5e7b3458923b24aafd152f8041ec09, type: 3}
       propertyPath: _storageType
       value: Stone
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199996982257231621, guid: 2c5e7b3458923b24aafd152f8041ec09, type: 3}
+      propertyPath: _buildingWidth
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199996982257231621, guid: 2c5e7b3458923b24aafd152f8041ec09, type: 3}
+      propertyPath: _buildingHeight
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5662414157046579459, guid: 2c5e7b3458923b24aafd152f8041ec09, type: 3}
       propertyPath: m_Name
@@ -1525,8 +1589,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridPos: {x: 6, y: -40}
-  _gridWidth: 3
-  _gridHeight: 3
+  _buildingWidth: 3
+  _buildingHeight: 3
   _storage: {fileID: 847203303}
   _recipeSO: {fileID: 11400000, guid: 1e8bb06f3194d944fac208f9288b1e46, type: 2}
 --- !u!4 &2094871616
@@ -1679,6 +1743,14 @@ PrefabInstance:
       propertyPath: _gridHeight
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 4199996982257231621, guid: 2c5e7b3458923b24aafd152f8041ec09, type: 3}
+      propertyPath: _buildingWidth
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199996982257231621, guid: 2c5e7b3458923b24aafd152f8041ec09, type: 3}
+      propertyPath: _buildingHeight
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5662414157046579459, guid: 2c5e7b3458923b24aafd152f8041ec09, type: 3}
       propertyPath: m_Name
       value: Storage
@@ -1707,3 +1779,4 @@ SceneRoots:
   - {fileID: 1570480075}
   - {fileID: 2094871616}
   - {fileID: 316883503}
+  - {fileID: 52579705}

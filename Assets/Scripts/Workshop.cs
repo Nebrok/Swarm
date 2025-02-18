@@ -23,7 +23,7 @@ public class Workshop : Building
 
     void Update()
     {
-        
+
     }
 
     void OpenNewRecipe(RecipeSO newRecipe)

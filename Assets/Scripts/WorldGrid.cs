@@ -111,10 +111,6 @@ public class WorldGrid : MonoBehaviour
 
     }
 
-
-
-
-
     public float GridSize
     {
         get {  return _gridSize; }

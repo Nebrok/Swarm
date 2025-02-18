@@ -6,9 +6,9 @@ public class Building : MonoBehaviour
     [SerializeField]
     protected Vector2Int _gridPos; //Bottom-Right grid cell 
     [SerializeField]
-    protected int _gridWidth;
+    protected int _buildingWidth;
     [SerializeField]
-    protected int _gridHeight;
+    protected int _buildingHeight;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,7 +24,7 @@ public class Building : MonoBehaviour
 
     protected void SetTransformToGridPos()
     {
-        WorldGrid.Instance.PlaceInGrid(_gridPos, _gridWidth, _gridHeight);
+        WorldGrid.Instance.PlaceInGrid(_gridPos, _buildingWidth, _buildingHeight);
 
         Vector3 updatedPosition = WorldGrid.GetWorldPosFromGrid(_gridPos);
         updatedPosition.x += transform.localScale.x / 2;

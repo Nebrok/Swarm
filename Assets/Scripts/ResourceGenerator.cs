@@ -1,21 +1,27 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
+
 
 public class ResourceGenerator : MonoBehaviour
 {
-    [SerializeField]
-    public GameObject ResourceToSpawn;
-    [SerializeField]
-    public float SpawnTime;
+    [SerializeField] public GameObject ResourceToSpawn;
 
-    [SerializeField]
-    private float _spawnRange;
+    [SerializeField] private int _spawnNum;
+
+    [SerializeField] private float _spawnRange;
+
+    [SerializeField] bool drawSpawnArea = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        StartCoroutine(SpawnNewResource());
+        for (int i = 0; i < _spawnNum; i++)
+        {
+            Vector3 randomLoc = new Vector3(Random.Range(-_spawnRange, _spawnRange), 0, Random.Range(-_spawnRange, _spawnRange));
+            randomLoc += transform.position;
+
+            Instantiate(ResourceToSpawn, randomLoc, Quaternion.identity, transform);
+        }
     }
 
     // Update is called once per frame
@@ -26,19 +32,9 @@ public class ResourceGenerator : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position, new Vector3(_spawnRange, _spawnRange, _spawnRange));
-    }
-
-
-    IEnumerator SpawnNewResource()
-    {
-        while (true)
+        if (drawSpawnArea)
         {
-            Vector3 resourcePos = new Vector3(Random.Range(-_spawnRange/2, _spawnRange/2), 0.25f, Random.Range(-_spawnRange/2, _spawnRange/2));
-            resourcePos += transform.position;
-
-            Instantiate(ResourceToSpawn, resourcePos, Quaternion.identity);
-            yield return new WaitForSeconds(SpawnTime);
+            Gizmos.DrawWireCube(transform.position, new Vector3(_spawnRange, _spawnRange, _spawnRange));
         }
     }
 }

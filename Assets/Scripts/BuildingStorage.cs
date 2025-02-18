@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingStorage : MonoBehaviour
+public class BuildingStorage : MonoBehaviour, IStorage
 {
     private List<IStorable> _storedItems = new List<IStorable>();
 
@@ -17,21 +17,7 @@ public class BuildingStorage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_storageModified)
-        {
-            int index = 0;
-            float runningHeightOffset = 0;
-            foreach (IStorable item in _storedItems)
-            {
-                Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z);
-                float itemHeight = item.GetGameObject().transform.localScale.y;
-                newPosition.y += runningHeightOffset + itemHeight / 2;
-                runningHeightOffset += itemHeight;
-                item.GetGameObject().transform.position = newPosition;
-                index++;
-            }
-            _storageModified = false;
-        }
+        UpdateStorageDisplay();
     }
 
     public bool AddItem(IStorable item)
@@ -49,6 +35,25 @@ public class BuildingStorage : MonoBehaviour
         item.SetStored(false);
 
         return item;
+    }
+
+    public void UpdateStorageDisplay()
+    {
+        if (_storageModified)
+        {
+            int index = 0;
+            float runningHeightOffset = 0;
+            foreach (IStorable item in _storedItems)
+            {
+                Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z);
+                float itemHeight = item.GetGameObject().transform.localScale.y;
+                newPosition.y += runningHeightOffset + itemHeight / 2;
+                runningHeightOffset += itemHeight;
+                item.GetGameObject().transform.position = newPosition;
+                index++;
+            }
+            _storageModified = false;
+        }
     }
 
 }
