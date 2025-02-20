@@ -17,7 +17,7 @@ public class RecipeSO : ScriptableObject
         get { return _product; }
     }
 
-    public List<Resource> ingredients
+    public List<Resource> Ingredients
     {
         get { return _ingredients; }
     }

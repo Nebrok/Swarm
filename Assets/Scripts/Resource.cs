@@ -87,4 +87,9 @@ public class Resource : MonoBehaviour, IStorable, IPickable
     {
         _isPickedUp = value;
     }
- }
+ 
+    public string GetItemName()
+    {
+        return _resourceName;
+    }
+}

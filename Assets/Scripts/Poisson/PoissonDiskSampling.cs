@@ -95,7 +95,6 @@ public class PoissonDiskSamples
 
                     if (distTweenPts < minimumDist)
                     {
-                        Debug.Log("Hit here");
                         invalidPos = true;
                         break;
                     }
