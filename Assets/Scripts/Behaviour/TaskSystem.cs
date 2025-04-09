@@ -11,12 +11,12 @@ public class TaskSystem
 
     public void Run()
     {
+        if (TaskQueue.Count == 0)
+        {
+            return;
+        }
         if (_currentTask == null)
         {
-            if (TaskQueue.Count == 0)
-            {
-                return;
-            }
             _currentTask = TaskQueue[0];
         }
 
@@ -34,7 +34,6 @@ public class TaskSystem
             } 
             _currentTask = TaskQueue[0];
         }
-        //Debug.Log(_currentTask.TaskName);
     }
 
     public void AddTask(Task task)
@@ -65,8 +64,6 @@ public class Task
     private Status _taskStatus = Status.Pending;
     private Priority _taskPriority = Priority.Medium; 
 
-
-
     public Task(string taskName)
     {
         TaskName = taskName;
@@ -87,5 +84,4 @@ public class Task
         get { return _taskPriority; }
         set { _taskPriority = value; }
     }
-
 }

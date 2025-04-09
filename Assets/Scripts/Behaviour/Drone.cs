@@ -167,8 +167,7 @@ public class Drone : MonoBehaviour, IMovable, ICanCarryItems
     }
 }
 
-
-
+//Tasks
 public class TravelToEntity : Task
 {
     private GameObject _goal;

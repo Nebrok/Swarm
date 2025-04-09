@@ -40,13 +40,8 @@ public class Hub : MonoBehaviour
             CreateNewDrone();
         }
 
-
         StartCoroutine(HubUpdateAvailiability());
         StartCoroutine(ScanEnvironmentRoutine());
-
-        Drone drone = GetUnassignedDrone();
-
-        drone.GoMineResource(_sources[0].gameObject);
     }
 
     void Update()

@@ -28,8 +28,6 @@ public class ItemTally
 
     public bool CompareTally(ItemTally other)
     {
-
-
         return ToString() == other.ToString();
     }
 
@@ -49,7 +47,6 @@ public class ItemTally
 
         return output;
     }
-
 
 }
 
